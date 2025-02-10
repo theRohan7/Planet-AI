@@ -3,6 +3,8 @@ import { CirclePlay } from 'lucide-react';
 import { Background, Controls, ReactFlow } from '@xyflow/react';
 import './App.css'
 import InputNode from './Nodes/InputNode';
+import EngineNode from './Nodes/EngineNode';
+
 
 const initialNodes = [
   { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
@@ -27,7 +29,6 @@ function App() {
         <Controls />
         <Background />
       </ReactFlow > */}
-      <InputNode />
       </section>
 
     </main>
