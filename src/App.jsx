@@ -2,6 +2,7 @@ import Logo from '/Logo.svg'
 import { CirclePlay } from 'lucide-react';
 import { Background, Controls, ReactFlow } from '@xyflow/react';
 import './App.css'
+import InputNode from './Nodes/InputNode';
 
 const initialNodes = [
   { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
@@ -22,10 +23,11 @@ function App() {
         </div>
       </nav>
       <section>
-      <ReactFlow nodes={initialNodes} edges={initialEdges}   >
+      {/* <ReactFlow nodes={initialNodes} edges={initialEdges}   >
         <Controls />
         <Background />
-      </ReactFlow >
+      </ReactFlow > */}
+      <InputNode />
       </section>
 
     </main>
