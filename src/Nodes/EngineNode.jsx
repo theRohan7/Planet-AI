@@ -105,7 +105,7 @@ function EngineNode() {
           />
           <label htmlFor="apiKey">OpenAI Key</label>
           <input
-            type="text"
+            type="password"
             id="apiKey"
             placeholder="Type something..."
             value={modelDetails.apiKey}
