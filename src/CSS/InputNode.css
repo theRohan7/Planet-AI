@@ -81,12 +81,27 @@
     font-size: 1.2rem;
 }
 
+.node-form textarea{
+    border: 1px solid #66666659;
+    padding: 0.8rem;
+    border-radius: 0.5rem;
+    font-size: 1.2rem;
+    min-width: 20rem;
+    max-width: fit-content;
+    min-height: 10rem;
+    max-height: fit-content;
+}
+
 .node-footer{
     color: #666666;
     text-align: right;
     padding: 1rem;
     display: flex;
     justify-content: space-between;
+}
 
+.input-footer {
+    display: flex;
+    flex-direction: row-reverse;
 }
     

@@ -9,6 +9,7 @@ nav{
   background-color: #ffffff;
   padding: 1rem 1.5rem;
   align-items: center;
+  border-bottom: 2px solid #00000012
 }
 
 .nav-btns{
@@ -50,8 +51,27 @@ nav{
 
 section{
   width: 100%;
-  height: calc(100vh - 4.5rem);
+  height: calc(100vh - 4.6rem);
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #FAFAFA;
+  
+}
+
+.dndflow {
+  flex-direction: column;
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+}
+
+ 
+.dndflow .reactflow-wrapper {
+  flex-grow: 1;
+  height: 100%;
+}
+
+.dndflow .selectall {
+  margin-top: 10px;
 }
