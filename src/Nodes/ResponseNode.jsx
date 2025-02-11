@@ -1,11 +1,11 @@
 import { FileOutput } from "lucide-react";
 import React from "react";
-import { useWorkflow } from "../Contexts/Workflow.context";
 import "../CSS/InputNode.css";
 import { Handle, Position } from "@xyflow/react";
+import { useAppContext } from "../Contexts/AppContext";
 
 function ResponseNode() {
-  const { modelResponse, setModelResponse } = useWorkflow();
+  const { modelResponse, setModelResponse, responseError } = useAppContext();
 
   return (
     <>
@@ -18,12 +18,12 @@ function ResponseNode() {
       return connection.sourceHandle === "engine-out"
      }}
     />
-      <div className="input-node">
+      <div className="input-node" style={{border: responseError ? '2px solid #FF5353' : ''}}>
         <div className="node-header">
           <h3>
             <FileOutput /> OUTPUT
           </h3>
-          <p></p>
+          <p style={{backgroundColor: responseError ? ' #FF5353': ''}} ></p>
         </div>
         <div className="node-description">
           <p>Lorem ipsum sic dolar amet</p>

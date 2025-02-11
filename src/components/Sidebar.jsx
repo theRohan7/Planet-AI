@@ -1,13 +1,13 @@
 import React from 'react'
-import { useDnD } from '../Contexts/DnDContext'
 import { Cpu, FileInput, FileOutput, Menu } from 'lucide-react'
 import '../CSS/Sidebar.css'
+import { useAppContext } from '../Contexts/AppContext';
 
 function Sidebar() {
-    const [_, setType] = useDnD()
+    const { setDnDType } = useAppContext();
 
     const onDragStart = (event, nodeType) => {
-      setType(nodeType);
+      setDnDType(nodeType);
       event.dataTransfer.effectAllowed = 'move';
     };
 

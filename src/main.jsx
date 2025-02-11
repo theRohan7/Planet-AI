@@ -2,18 +2,18 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
-import { WorkflowProvider } from "./Contexts/Workflow.context.jsx";
 import { ReactFlowProvider } from "@xyflow/react";
-import { DnDProvider } from "./Contexts/DnDContext.jsx";
+import { AppProvider } from "./Contexts/AppContext.jsx";
+import { Toaster } from "react-hot-toast";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+    <Toaster />
     <ReactFlowProvider>
-      <DnDProvider>
-        <WorkflowProvider>
+      <AppProvider>
+
           <App />
-        </WorkflowProvider>
-      </DnDProvider>
+      </AppProvider>
     </ReactFlowProvider>
   </StrictMode>
 );

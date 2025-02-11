@@ -2,14 +2,14 @@ import { FileInput } from "lucide-react";
 import React, { useState } from "react";
 import { Handle, Position } from "@xyflow/react";
 import "../CSS/InputNode.css";
-import { useWorkflow } from "../Contexts/Workflow.context";
+import { useAppContext } from "../Contexts/AppContext";
 
 function InputNode() {
-  const { userInput, setUserInput } = useWorkflow();
+  const { userInput, setUserInput, inputError } = useAppContext();
 
   return (
   
-      <div className="input-node">
+      <div className="input-node" style={{border: inputError ? '2px solid #FF5353' : ''}}>
        <Handle 
         position={Position.Right} 
         style={{width:"0.7rem", height:"0.7rem", marginTop:"7.8rem" }}
@@ -23,7 +23,7 @@ function InputNode() {
           <h3>
             <FileInput /> INPUT
           </h3>
-          <p></p>
+          <p style={{backgroundColor: inputError ? ' #FF5353': ''}}  ></p>
         </div>
         <div className="node-description">
           <p>Write the Input/Question you want to ask</p>

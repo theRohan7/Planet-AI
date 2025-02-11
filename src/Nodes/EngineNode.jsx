@@ -1,17 +1,13 @@
 import React, { useState } from "react";
 import "../CSS/InputNode.css";
-import { useWorkflow } from "../Contexts/Workflow.context";
 import { ChevronDown, Cpu } from "lucide-react";
 import { Handle, Position } from "@xyflow/react";
+import { useAppContext } from "../Contexts/AppContext";
 
 function EngineNode() {
-  const { modelDetails, setModelDetails } = useWorkflow();
+  const { modelDetails, setModelDetails, modelError } = useAppContext();
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
   const [isTempDropdownOpen, setIsTempDropdownOpen] = useState(false);
-
-  console.log(
-    modelDetails
-  );
   
 
   const modelOptions = ["GPT-4", "GPT-4o", "GPT-4o mini"];
@@ -61,12 +57,12 @@ function EngineNode() {
       return connection.targetHandle === 'response-in'
      }}
     />
-      <div className="input-node">
+      <div className="input-node" style={{border: modelError ? '2px solid #FF5353' : ''}}>
         <div className="node-header">
           <h3>
             <Cpu /> LLM ENGINE
           </h3>
-          <p></p>
+          <p style={{backgroundColor: modelError ? ' #FF5353' : ''}} ></p>
         </div>
         <div className="node-description">
           <p>Lorem ipsum sic dola amet</p>

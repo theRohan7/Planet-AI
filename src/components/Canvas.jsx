@@ -15,12 +15,14 @@ import "@xyflow/react/dist/style.css";
 import InputNode from "../Nodes/InputNode";
 import EngineNode from "../Nodes/EngineNode";
 import ResponseNode from "../Nodes/ResponseNode";
-import { useDnD } from "../Contexts/DnDContext";
+import { useAppContext } from "../Contexts/AppContext";
 
 
 
-let id = 0;
-const getId = () => `dndnode_${id++}`;
+const getId = (() => {
+  let id = 0;
+  return () => `dndnode_${id++}`;
+})();
 
 const nodeTypes = {
   userInputNode: InputNode,
@@ -28,23 +30,13 @@ const nodeTypes = {
   responseNode: ResponseNode,
 };
 
-const defaultEdgeOptions = {
-  animated: true,
-  style: {
-    stroke: '#555',
-    strokeWidth: 2,
-  },
-};
-
-const initialNodes = [];
-const initialEdges = [];
 
 function Canvas() {
   const reactFlowWrapper = useRef(null);
-  const [nodes, setNodes] = useNodesState(initialNodes);
-  const [edges, setEdges] = useEdgesState(initialEdges);
+  const [nodes, setNodes] = useNodesState([]);
+  const [edges, setEdges] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
-  const [type] = useDnD();
+  const { dndType } = useAppContext();
 
   const onConnect = useCallback(
     (params) => {
@@ -74,26 +66,16 @@ function Canvas() {
     [nodes, setEdges]
   );
 
-  const onNodesChange = useCallback((changes) => {
-    setNodes((nds) => applyNodeChanges(changes, nds));
-  }, [setNodes]);
-
-  const onEdgesChange = useCallback((changes) => {
-    setEdges((eds) => applyEdgeChanges(changes, eds));
-  }, [setEdges]);
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
   }, []);
 
-  const onDrop = useCallback(
+  const handleDrop = useCallback(
     (event) => {
       event.preventDefault();
-
-      if (!type) {
-        return;
-      }
+      if (!dndType) return;
 
       const position = screenToFlowPosition({
         x: event.clientX,
@@ -103,18 +85,20 @@ function Canvas() {
       const nodeTypeMapping = {
         userInput: 'userInputNode',
         model: 'modelNode',
-        response: 'responseNode'
-      };
-      const newNode = {
-        id: getId(),
-        type: nodeTypeMapping[type], 
-        position,
-        data: { label: `${type} node` },
+        response: 'responseNode',
       };
 
-      setNodes((nds) => [...(nds || []), newNode]);
+      setNodes((nds) => [
+        ...nds,
+        {
+          id: getId(),
+          type: nodeTypeMapping[dndType],
+          position,
+          data: { label: `${dndType} node` },
+        },
+      ]);
     },
-    [screenToFlowPosition, type]
+    [screenToFlowPosition, dndType]
   );
 
   return (
@@ -123,12 +107,11 @@ function Canvas() {
         <ReactFlow
           nodes={nodes}
           edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
+          onNodesChange={(changes) => setNodes((nds) => applyNodeChanges(changes, nds))}
+          onEdgesChange={(changes) => setEdges((eds) => applyEdgeChanges(changes, eds))}
           onConnect={onConnect}
-          onDrop={onDrop}
+          onDrop={handleDrop}
           onDragOver={onDragOver}
-          defaultEdgeOptions={defaultEdgeOptions}
           nodeTypes={nodeTypes}
         >
           <Controls />
