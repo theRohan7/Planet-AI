@@ -1,17 +1,45 @@
 import React, { useState } from "react";
 import "../CSS/InputNode.css";
 import { useWorkflow } from "../Contexts/Workflow.context";
-import { Cpu } from "lucide-react";
+import { ChevronDown, Cpu } from "lucide-react";
 import { Handle, Position } from "@xyflow/react";
 
 function EngineNode() {
   const { modelDetails, setModelDetails } = useWorkflow();
+  const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
+  const [isTempDropdownOpen, setIsTempDropdownOpen] = useState(false);
 
-  const handleModelChange = () => {};
+  console.log(
+    modelDetails
+  );
+  
 
-  const handleChange = () => {};
+  const modelOptions = ["GPT-4", "GPT-4o", "GPT-4o mini"];
+  const temperatureOptions = ["0.0", "0.5", "1.0"];
 
-  const handleTempChange = () => {};
+  const handleModelChange = (selectedModel) => {
+    setModelDetails(prev => ({
+      ...prev,
+      modelName: selectedModel
+    }));
+    setIsModelDropdownOpen(false);
+  };
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setModelDetails(prev => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+
+  const handleTempChange = (selectedTemp) => {
+    setModelDetails(prev => ({
+      ...prev,
+      temperature: selectedTemp
+    }));
+    setIsTempDropdownOpen(false);
+  };
 
   return (
     <>
@@ -45,12 +73,28 @@ function EngineNode() {
         </div>
         <div className="engine-node-form">
           <label htmlFor="modelName">Model Name</label>
-          <input
-            type="text"
-            value={modelDetails.modelName}
-            placeholder="Type something..."
-            onChange={handleModelChange}
-          />
+          <div className="custom-dropdown">
+            <div 
+              className="dropdown-header"
+              onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
+            >
+              <span>{modelDetails.modelName || "Select model..."}</span>
+              <ChevronDown size={16} />
+            </div>
+            {isModelDropdownOpen && (
+              <div className="dropdown-options">
+                {modelOptions.map((option) => (
+                  <div
+                    key={option}
+                    className="dropdown-item"
+                    onClick={() => handleModelChange(option)}
+                  >
+                    {option}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
           <label htmlFor="apiBase">OpenAI API Base</label>
           <input
             type="text"
@@ -69,20 +113,35 @@ function EngineNode() {
           />
           <label htmlFor="maxToken">Max Tokens</label>
           <input
-            type="text"
-            id="maxToken"
+            type="number"
+            id="maxTokens"
             placeholder="Type something..."
             value={modelDetails.maxTokens}
             onChange={handleChange}
           />
           <label htmlFor="temp">Temperature</label>
-          <input
-            type="number"
-            id="temp"
-            placeholder="Type something..."
-            value={modelDetails.temperature}
-            onChange={handleTempChange}
-          />
+          <div className="custom-dropdown">
+            <div 
+              className="dropdown-header"
+              onClick={() => setIsTempDropdownOpen(!isTempDropdownOpen)}
+            >
+              <span>{modelDetails.temperature || "Select temperature..."}</span>
+              <ChevronDown size={16} />
+            </div>
+            {isTempDropdownOpen && (
+              <div className="dropdown-options">
+                {temperatureOptions.map((option) => (
+                  <div
+                    key={option}
+                    className="dropdown-item"
+                    onClick={() => handleTempChange(option)}
+                  >
+                    {option}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
         <div className="node-footer">
           <span>Input</span>
