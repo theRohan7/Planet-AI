@@ -5,7 +5,7 @@ import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { useAppContext } from "../Contexts/AppContext";
 
 function EngineNode({ id, data }) {
-  const { modelDetails, setModelDetails, modelError} = useAppContext();
+  const { modelDetails, setModelDetails, modelError, modelSucess} = useAppContext();
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
   const [isTempDropdownOpen, setIsTempDropdownOpen] = useState(false);
   const {setNodes} = useReactFlow()
@@ -85,7 +85,7 @@ function EngineNode({ id, data }) {
           <h3>
             <Cpu /> LLM ENGINE
           </h3>
-          <p style={{backgroundColor: modelError ? ' #FF5353' : ''}} ></p>
+          <p style={{backgroundColor: `${modelError ? '#FF5353' : modelSucess ? '#0FA958' : ''}`}} ></p>
         </div>
         <div className="node-description">
           <p>Lorem ipsum sic dola amet</p>

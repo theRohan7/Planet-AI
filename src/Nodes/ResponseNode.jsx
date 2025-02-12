@@ -5,7 +5,7 @@ import { Handle, Position } from "@xyflow/react";
 import { useAppContext } from "../Contexts/AppContext";
 
 function ResponseNode() {
-  const { modelResponse, setModelResponse, responseError } = useAppContext();
+  const { modelResponse, setModelResponse, responseError, responseSucess } = useAppContext();
 
   return (
     <>
@@ -23,7 +23,7 @@ function ResponseNode() {
           <h3>
             <FileOutput /> OUTPUT
           </h3>
-          <p style={{backgroundColor: responseError ? ' #FF5353': ''}} ></p>
+          <p style={{backgroundColor: responseError ? ' #FF5353': responseSucess ? '#0FA958' : ''}} ></p>
         </div>
         <div className="node-description">
           <p>Lorem ipsum sic dolar amet</p>

@@ -20,7 +20,7 @@ function App() {
     setModelError, 
     setResponseError,
     setLoading,
-    modelDetails, userInput, setModelResponse, isDeployed, setIsDeployed
+    modelDetails, userInput, setModelResponse, isDeployed, setIsDeployed, setInputSucess, setModelSucess, setResponseSucess
   } = useAppContext();  
   const [showModal, setShowModal] = useState(false);
 
@@ -45,11 +45,16 @@ function App() {
         stream: true,
       });
 
+      setInputSucess(true);
+      setModelSucess(true);
+      setResponseSucess(true);
+      toast.success("Flow ran successfully and ready to be deployed");
+
       for await (const chunk of stream) {
         const response = chunk.choices[0].delta.content;
         setModelResponse((prevResponse) => prevResponse + response);
       }
-      toast.success("Flow ran successfully and ready to be deployed");
+      
       
     } catch (error) {
       setResponseError(true);

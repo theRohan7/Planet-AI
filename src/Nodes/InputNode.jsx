@@ -8,7 +8,7 @@ function InputNode({ id, data }) {
 
   
 
-  const { userInput, setUserInput, inputError } = useAppContext();
+  const { userInput, setUserInput, inputError, inputSucess } = useAppContext();
   const { setNodes } = useReactFlow()
 
 
@@ -39,7 +39,7 @@ function InputNode({ id, data }) {
           <h3>
             <FileInput /> INPUT
           </h3>
-          <p style={{backgroundColor: inputError ? ' #FF5353': ''}}  ></p>
+          <p style={{backgroundColor: inputError ? ' #FF5353': inputSucess? '#0FA958' : ''}}  ></p>
         </div>
         <div className="node-description">
           <p>Write the Input/Question you want to ask</p>
