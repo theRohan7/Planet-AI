@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../CSS/InputNode.css";
 import { ChevronDown, Cpu } from "lucide-react";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { useAppContext } from "../Contexts/AppContext";
 
 function EngineNode({ id, data }) {
-  const { modelDetails, setModelDetails, modelError } = useAppContext();
+  const { modelDetails, setModelDetails, modelError} = useAppContext();
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
   const [isTempDropdownOpen, setIsTempDropdownOpen] = useState(false);
   const {setNodes} = useReactFlow()
@@ -20,24 +20,32 @@ function EngineNode({ id, data }) {
   const temperatureOptions = ["0.0", "0.5", "1.0"];
 
 
-  const updateNodeAndContext = (updates) => {
-    setModelDetails(prev => ({
-      ...prev,
-      ...updates
-    }))
+  const updateNodeAndContext = async (updates) => {
+    try {
+  
+      await setModelDetails(prev => ({
+        ...prev,
+        ...updates
+      }));
 
+      setNodes(nodes =>
+        nodes.map(node =>
+          node.id === id ? { ...node, data: { ...node.data, ...updates }} : node
+        )
+      );
 
-    setNodes(nodes => 
-      nodes.map(node => 
-        node.id === id ? {...node, data: {...node.data, ...updates}} : node
-      )
-    )
-  }
+    } catch (error) {
+      console.error("Error updating node:", error);
+    }
+  };
 
   const handleModelChange = (selectedModel) => {
-    updateNodeAndContext({modelName: selectedModel, apiBase: 'https://api.openai.com/v1'});
+    updateNodeAndContext({
+      modelName: selectedModel,
+      apiBase: 'https://api.openai.com/v1'
+    });
     setIsModelDropdownOpen(false);
-  };
+  };  
 
   const handleChange = (e) => {
     const { id: fieldId, value } = e.target;
@@ -50,13 +58,7 @@ function EngineNode({ id, data }) {
     setIsTempDropdownOpen(false);
   };
 
-  const displayValues = {
-    modelName: data?.modelName ?? modelDetails.modelName,
-    apiBase: data?.apiBase ?? modelDetails.apiBase,
-    apiKey: data?.apiKey ?? modelDetails.apiKey,
-    maxTokens: data?.maxTokens ?? modelDetails.maxTokens,
-    temperature: data?.temperature ?? modelDetails.temperature
-  };
+
 
   return (
     <>
@@ -78,7 +80,7 @@ function EngineNode({ id, data }) {
       return connection.targetHandle === 'response-in'
      }}
     />
-      <div className="input-node" style={{border: modelError ? '2px solid #FF5353' : ''}}>
+      <div className="input-node "  style={{border: modelError ? '2px solid #FF5353' : ''}}>
         <div className="node-header">
           <h3>
             <Cpu /> LLM ENGINE
@@ -93,9 +95,9 @@ function EngineNode({ id, data }) {
           <div className="custom-dropdown">
             <div 
               className="dropdown-header"
-              onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
+              onClick={() =>setIsModelDropdownOpen(!isModelDropdownOpen)}
             >
-              <span>{displayValues.modelName || "Select model..."}</span>
+              <span>{data?.modelName || "Select model..."}</span>
               <ChevronDown size={16} />
             </div>
             {isModelDropdownOpen && (
@@ -117,7 +119,7 @@ function EngineNode({ id, data }) {
             type="text"
             id="apiBase"
             placeholder="Type something..."
-            value={displayValues.apiBase}
+            value={data?.apiBase}
             onChange={handleChange}
           />
           <label htmlFor="apiKey">OpenAI Key</label>
@@ -125,7 +127,7 @@ function EngineNode({ id, data }) {
             type="password"
             id="apiKey"
             placeholder="Type something..."
-            value={displayValues.apiKey}
+            value={data?.apiKey}
             onChange={handleChange}
           />
           <label htmlFor="maxToken">Max Tokens</label>
@@ -133,16 +135,16 @@ function EngineNode({ id, data }) {
             type="number"
             id="maxTokens"
             placeholder="Type something..."
-            value={displayValues.maxTokens}
+            value={data?.maxTokens}
             onChange={handleChange}
           />
           <label htmlFor="temp">Temperature</label>
           <div className="custom-dropdown">
             <div 
               className="dropdown-header"
-              onClick={() => setIsTempDropdownOpen(!isTempDropdownOpen)}
+              onClick={() =>setIsTempDropdownOpen(!isTempDropdownOpen)}
             >
-              <span>{displayValues.temperature || "Select temperature..."}</span>
+              <span>{data?.temperature || "Select temperature..."}</span>
               <ChevronDown size={16} />
             </div>
             {isTempDropdownOpen && (

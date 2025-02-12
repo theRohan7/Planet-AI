@@ -1,9 +1,6 @@
 
 export const validateWorkflow = (nodes, edges) => {
   
-  console.log(nodes, edges);
-  
-
     const  nodeTypes = nodes.map(node => node.type)
     const requiredTypes = ['userInputNode', 'modelNode', 'responseNode'];
 

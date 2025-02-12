@@ -19,8 +19,6 @@ export const AppProvider = ({ children }) => {
   const [inputError, setInputError]  = useState(false)
   const [modelError, setModelError]  = useState(false)
   const [responseError, setResponseError]  = useState(false)
-
-  console.log(dndType);
   
 
   return (

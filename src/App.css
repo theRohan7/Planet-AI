@@ -59,6 +59,18 @@ section{
   
 }
 
+section button {
+  border: none;
+  position: absolute;
+  padding: 0.5rem 1rem;
+  border-radius: 50%;
+  background-color: #2563EB;
+  cursor: pointer;
+  color: #ffffff;
+  bottom: 10%;
+  right: 2%;
+}
+
 .dndflow {
   flex-direction: column;
   display: flex;

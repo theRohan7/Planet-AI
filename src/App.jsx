@@ -4,7 +4,7 @@ import "./App.css";
 import Canvas from "./components/Canvas";
 import Sidebar from "./components/Sidebar.jsx"
 import { useReactFlow } from "@xyflow/react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useAppContext } from "./Contexts/AppContext.jsx";
 import { validateWorkflow } from "./ustils/workflowValidator.js";
 import toast from "react-hot-toast";
@@ -21,14 +21,11 @@ function App() {
     setLoading,
     modelDetails, userInput, setModelResponse
   } = useAppContext();
-
-
-
-  console.log(modelDetails);
-  
+  const [deployed, setDelpoyed] = useState(true);  
 
   const generateResponse = async () => {
-    try {
+    try {    
+
 
       if (!modelDetails.apiKey || !modelDetails.modelName) {
         throw new Error('Missing required model configuration');
@@ -63,6 +60,7 @@ function App() {
     // Reset all errors
     setInputError(false);
     setModelError(false);
+    setModelResponse('');
     setResponseError(false);
 
     const nodes = getNodes();
@@ -89,7 +87,7 @@ function App() {
     } finally {
       setLoading(false);
     }
-  }, [getNodes, getEdges, setInputError, setModelError, setResponseError, setLoading]);
+  }, [getNodes, getEdges, setInputError, setModelError, modelDetails, setResponseError, setLoading]);
 
 
   
@@ -105,7 +103,7 @@ function App() {
           </button>
         </div>
       </nav>
-      <section>
+      <section style={{position: 'relative'}}>
           <Sidebar />
           <Canvas />
       </section>
