@@ -1,11 +1,27 @@
 import { FileInput } from "lucide-react";
 import React, { useState } from "react";
-import { Handle, Position } from "@xyflow/react";
+import { Handle, Position, useReactFlow } from "@xyflow/react";
 import "../CSS/InputNode.css";
 import { useAppContext } from "../Contexts/AppContext";
 
-function InputNode() {
+function InputNode({ id, data }) {
+
+  
+
   const { userInput, setUserInput, inputError } = useAppContext();
+  const { setNodes } = useReactFlow()
+
+
+  const handleInputChange = (e) => {
+    const newValue  = e.target.value;
+    setUserInput(newValue);
+
+    setNodes((nodes) => nodes.map((node) => 
+    node.id === id ? {...node, data: {...node.data, inputText: newValue}} : node));
+  }
+
+  const displayValue = data?.inputText ?? userInput;
+
 
   return (
   
@@ -33,8 +49,8 @@ function InputNode() {
           <input
             type="text"
             placeholder="Type something..."
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
+            value={displayValue}
+            onChange={handleInputChange}
           />
         </div>
         <div className="node-footer input-footer">

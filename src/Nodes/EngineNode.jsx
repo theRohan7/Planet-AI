@@ -1,40 +1,61 @@
 import React, { useState } from "react";
 import "../CSS/InputNode.css";
 import { ChevronDown, Cpu } from "lucide-react";
-import { Handle, Position } from "@xyflow/react";
+import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { useAppContext } from "../Contexts/AppContext";
 
-function EngineNode() {
+function EngineNode({ id, data }) {
   const { modelDetails, setModelDetails, modelError } = useAppContext();
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
   const [isTempDropdownOpen, setIsTempDropdownOpen] = useState(false);
+  const {setNodes} = useReactFlow()
   
 
-  const modelOptions = ["GPT-4", "GPT-4o", "GPT-4o mini"];
+  const modelOptions = [
+    "gpt-4",
+    "gpt-4-turbo-preview",
+    "gpt-3.5-turbo"
+  ];
+  
   const temperatureOptions = ["0.0", "0.5", "1.0"];
 
-  const handleModelChange = (selectedModel) => {
+
+  const updateNodeAndContext = (updates) => {
     setModelDetails(prev => ({
       ...prev,
-      modelName: selectedModel
-    }));
+      ...updates
+    }))
+
+
+    setNodes(nodes => 
+      nodes.map(node => 
+        node.id === id ? {...node, data: {...node.data, ...updates}} : node
+      )
+    )
+  }
+
+  const handleModelChange = (selectedModel) => {
+    updateNodeAndContext({modelName: selectedModel, apiBase: 'https://api.openai.com/v1'});
     setIsModelDropdownOpen(false);
   };
 
   const handleChange = (e) => {
-    const { id, value } = e.target;
-    setModelDetails(prev => ({
-      ...prev,
-      [id]: value
-    }));
+    const { id: fieldId, value } = e.target;
+    updateNodeAndContext({ [fieldId]: value });
   };
 
   const handleTempChange = (selectedTemp) => {
-    setModelDetails(prev => ({
-      ...prev,
-      temperature: selectedTemp
-    }));
+    const tempValue = parseFloat(selectedTemp);
+    updateNodeAndContext({ temperature: tempValue });
     setIsTempDropdownOpen(false);
+  };
+
+  const displayValues = {
+    modelName: data?.modelName ?? modelDetails.modelName,
+    apiBase: data?.apiBase ?? modelDetails.apiBase,
+    apiKey: data?.apiKey ?? modelDetails.apiKey,
+    maxTokens: data?.maxTokens ?? modelDetails.maxTokens,
+    temperature: data?.temperature ?? modelDetails.temperature
   };
 
   return (
@@ -74,7 +95,7 @@ function EngineNode() {
               className="dropdown-header"
               onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
             >
-              <span>{modelDetails.modelName || "Select model..."}</span>
+              <span>{displayValues.modelName || "Select model..."}</span>
               <ChevronDown size={16} />
             </div>
             {isModelDropdownOpen && (
@@ -96,7 +117,7 @@ function EngineNode() {
             type="text"
             id="apiBase"
             placeholder="Type something..."
-            value={modelDetails.apiBase}
+            value={displayValues.apiBase}
             onChange={handleChange}
           />
           <label htmlFor="apiKey">OpenAI Key</label>
@@ -104,7 +125,7 @@ function EngineNode() {
             type="password"
             id="apiKey"
             placeholder="Type something..."
-            value={modelDetails.apiKey}
+            value={displayValues.apiKey}
             onChange={handleChange}
           />
           <label htmlFor="maxToken">Max Tokens</label>
@@ -112,7 +133,7 @@ function EngineNode() {
             type="number"
             id="maxTokens"
             placeholder="Type something..."
-            value={modelDetails.maxTokens}
+            value={displayValues.maxTokens}
             onChange={handleChange}
           />
           <label htmlFor="temp">Temperature</label>
@@ -121,7 +142,7 @@ function EngineNode() {
               className="dropdown-header"
               onClick={() => setIsTempDropdownOpen(!isTempDropdownOpen)}
             >
-              <span>{modelDetails.temperature || "Select temperature..."}</span>
+              <span>{displayValues.temperature || "Select temperature..."}</span>
               <ChevronDown size={16} />
             </div>
             {isTempDropdownOpen && (

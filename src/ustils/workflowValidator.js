@@ -1,6 +1,8 @@
 
 export const validateWorkflow = (nodes, edges) => {
-   
+  
+  console.log(nodes, edges);
+  
 
     const  nodeTypes = nodes.map(node => node.type)
     const requiredTypes = ['userInputNode', 'modelNode', 'responseNode'];
@@ -12,70 +14,52 @@ export const validateWorkflow = (nodes, edges) => {
             node: null}
     }
 
-    const connections = new Map();
-    for (const edge of edges) {
-        const sourceNode = nodes.find(n => n.id === edge.source);
-        const targetNode = nodes.find(n => n.id === edge.target);
-
-        
-        connections.set(sourceNode.id, targetNode.id);
+   if(edges.length === 0) {
+    return {
+      message: `connnection between nodes is missing`,
+      node: null
     }
+   }
+   const connetcedToModel = edges.some(edge => edge.sourceHandle === 'input-out' && edge.targetHandle === 'engine-in');
+   const connetcedToResponse = edges.some(edge => edge.sourceHandle === 'engine-out' && edge.targetHandle === 'response-in');
+
+   if(!connetcedToModel) return {
+    message: `Missing connection between user input node and model node`,
+    node: null}
+
+   if(!connetcedToResponse) return {
+    message: `Missing connection between model node and response node`,
+    node: null}
   
-    // Validate connection flow
-    const inputNodes = nodes.filter(n => n.type === 'userInputNode');
-    const modelNodes = nodes.filter(n => n.type === 'modelNode');
-    const responseNodes = nodes.filter(n => n.type === 'responseNode');
-  
-    // Check if input nodes are connected to model nodes
-    inputNodes.forEach(inputNode => {
-      const connectedToModel = Array.from(connections.entries())
-        .some(([source, target]) => 
-          source === inputNode.id && 
-          nodes.find(n => n.id === target)?.type === 'modelNode'
-        );
-      
-      if (!connectedToModel) {
-        return {
-          message: `Input node must be connected to a model node`,
-          node: inputNode};
-      }
-    });
-  
-    // Check if model nodes are connected to response nodes
-    modelNodes.forEach(modelNode => {
-      const connectedToResponse = Array.from(connections.entries())
-        .some(([source, target]) => 
-          source === modelNode.id && 
-          nodes.find(n => n.id === target)?.type === 'responseNode'
-        );
-      
-      if (!connectedToResponse) {
-        return {
-          message: `Model node must be connected to a response node`,
-          node: modelNode};
-      }
-    });
-  
-    // Validate individual node data
-    nodes.forEach(node => {
+    for (const node of nodes) {
       switch (node.type) {
         case 'userInputNode':
           if (!node.data?.inputText?.trim()) {
+            console.log(node);
             return {
-              message: `User input node is missing input text`,
-              node: node};
+              message: 'User input node is missing input text',
+              node: node
+            };
           }
           break;
+  
         case 'modelNode':
           const requiredModelFields = ['modelName', 'apiBase', 'apiKey', 'maxTokens'];
-          requiredModelFields.forEach(field => {
+          for (const field of requiredModelFields) {
             if (!node.data?.[field]?.trim()) {
               return {
                 message: `Model node is missing ${field}`,
-                node: node};
+                node: node
+              };
             }
-          });
+          }
           break;
       }
-    });
+    }
+  
+    // If all validations pass, return success
+    return {
+      message: null,
+      node: null
+    };
 }

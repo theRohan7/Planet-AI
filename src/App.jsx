@@ -8,6 +8,7 @@ import { useCallback } from "react";
 import { useAppContext } from "./Contexts/AppContext.jsx";
 import { validateWorkflow } from "./ustils/workflowValidator.js";
 import toast from "react-hot-toast";
+import OpenAI from "openai"
 
 
 function App() {
@@ -18,7 +19,45 @@ function App() {
     setModelError, 
     setResponseError,
     setLoading,
+    modelDetails, userInput, setModelResponse
   } = useAppContext();
+
+
+
+  console.log(modelDetails);
+  
+
+  const generateResponse = async () => {
+    try {
+
+      if (!modelDetails.apiKey || !modelDetails.modelName) {
+        throw new Error('Missing required model configuration');
+      }
+
+      const client = new OpenAI({
+        apiKey: modelDetails.apiKey,
+        baseURL:  'https://api.openai.com/v1',
+        dangerouslyAllowBrowser: true
+      });
+
+      const stream = await client.chat.completions.create({
+        model: modelDetails.modelName.toLowerCase(), 
+        messages: [{ role: "user", content: userInput }],
+        temperature: parseFloat(modelDetails.temperature) || 0.7,
+        stream: true,
+      });
+
+      for await (const chunk of stream) {
+        const response = chunk.choices[0].delta.content;
+        setModelResponse((prevResponse) => prevResponse + response);
+      }
+      
+    } catch (error) {
+      setResponseError(true);
+    toast.error(error.message);
+    throw error;
+    }
+  }
 
   const handleRun = useCallback(async () => {
     // Reset all errors

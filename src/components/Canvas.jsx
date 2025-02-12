@@ -88,13 +88,44 @@ function Canvas() {
         response: 'responseNode',
       };
 
+      const newId = getId();
+      
+      // Create initial node data based on type
+      const getInitialData = (type) => {
+        switch (type) {
+          case 'userInputNode':
+            return {
+              inputText: '',
+              label: `${dndType} node`
+            };
+          case 'modelNode':
+            return {
+              modelName: '',
+              apiBase: '',
+              apiKey: '',
+              maxTokens: '',
+              label: `${dndType} node`
+            };
+          case 'responseNode':
+            return {
+              label: `${dndType} node`
+            };
+          default:
+            return { label: `${dndType} node` };
+        }
+      };
+
+      const nodeType = nodeTypeMapping[dndType];
+      const initialData = getInitialData(nodeType);
+
       setNodes((nds) => [
         ...nds,
         {
-          id: getId(),
-          type: nodeTypeMapping[dndType],
+          id: newId,
+          type: nodeType,
           position,
-          data: { label: `${dndType} node` },
+          data: initialData,
+          dragHandle: '.node-header',
         },
       ]);
     },
