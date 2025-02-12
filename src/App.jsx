@@ -9,6 +9,7 @@ import { useAppContext } from "./Contexts/AppContext.jsx";
 import { validateWorkflow } from "./ustils/workflowValidator.js";
 import toast from "react-hot-toast";
 import OpenAI from "openai"
+import UndeployModel from "./components/UndeployModel.jsx";
 
 
 function App() {
@@ -19,9 +20,9 @@ function App() {
     setModelError, 
     setResponseError,
     setLoading,
-    modelDetails, userInput, setModelResponse
-  } = useAppContext();
-  const [deployed, setDelpoyed] = useState(true);  
+    modelDetails, userInput, setModelResponse, isDeployed, setIsDeployed
+  } = useAppContext();  
+  const [showModal, setShowModal] = useState(false);
 
   const generateResponse = async () => {
     try {    
@@ -48,6 +49,7 @@ function App() {
         const response = chunk.choices[0].delta.content;
         setModelResponse((prevResponse) => prevResponse + response);
       }
+      toast.success("Flow ran successfully and ready to be deployed");
       
     } catch (error) {
       setResponseError(true);
@@ -89,6 +91,24 @@ function App() {
     }
   }, [getNodes, getEdges, setInputError, setModelError, modelDetails, setResponseError, setLoading]);
 
+  const handleDeploy = () => {
+    if (!isDeployed) {
+      setIsDeployed(true);
+      toast.success(
+        <div className="success-toast">
+          <h3>Successfully deployed</h3>
+          <p>You can now chat with the AI Assistant.</p>
+        </div>
+      );
+    } else {
+      setShowModal(true);
+    }
+  };
+
+  const handleUndeploy = () => {
+    setIsDeployed(false);
+    setShowModal(false);
+  };
 
   
 
@@ -97,7 +117,17 @@ function App() {
       <nav>
         <img src={Logo} alt="Logo" />
         <div className="nav-btns">
-          <button className="deploy-btn">Deploy</button>
+        <button
+            className="deploy-btn"
+            onClick={handleDeploy}
+            style={{
+              color: isDeployed ? '#FF5353' : '',
+              border: isDeployed ? '2px solid #FF5353' : '',
+              backgroundColor: isDeployed ? 'white' : ''
+            }}
+          >
+            {isDeployed ? 'Undeploy' : 'Deploy'}
+          </button>
           <button className="run-btn" onClick={handleRun}>
             <CirclePlay /> Run
           </button>
@@ -107,6 +137,11 @@ function App() {
           <Sidebar />
           <Canvas />
       </section>
+      <UndeployModel 
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onUndeploy={handleUndeploy}
+      />
     </main>
   );
 }

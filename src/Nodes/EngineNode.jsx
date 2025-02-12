@@ -23,7 +23,7 @@ function EngineNode({ id, data }) {
   const updateNodeAndContext = async (updates) => {
     try {
   
-      await setModelDetails(prev => ({
+      setModelDetails(prev => ({
         ...prev,
         ...updates
       }));

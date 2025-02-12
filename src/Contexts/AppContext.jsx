@@ -19,13 +19,15 @@ export const AppProvider = ({ children }) => {
   const [inputError, setInputError]  = useState(false)
   const [modelError, setModelError]  = useState(false)
   const [responseError, setResponseError]  = useState(false)
+  const [isDeployed, setIsDeployed]  = useState(false)
   
 
   return (
     <AppContext.Provider value={{
       userInput, setUserInput, loading, setLoading,
       modelDetails, setModelDetails, modelResponse, setModelResponse,
-      dndType, setDnDType, inputError, setInputError, modelError, setModelError, setResponseError, responseError
+      dndType, setDnDType, inputError, setInputError, modelError, setModelError, setResponseError, responseError,
+      isDeployed, setIsDeployed
     }}>
       {children}
     </AppContext.Provider>

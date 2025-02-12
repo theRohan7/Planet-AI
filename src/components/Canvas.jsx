@@ -16,6 +16,7 @@ import InputNode from "../Nodes/InputNode";
 import EngineNode from "../Nodes/EngineNode";
 import ResponseNode from "../Nodes/ResponseNode";
 import { useAppContext } from "../Contexts/AppContext";
+import { MessageCircleMore } from "lucide-react";
 
 
 
@@ -36,7 +37,7 @@ function Canvas() {
   const [nodes, setNodes] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
-  const { dndType } = useAppContext();
+  const { dndType, isDeployed } = useAppContext();
 
   const onConnect = useCallback(
     (params) => {
@@ -132,6 +133,14 @@ function Canvas() {
     [screenToFlowPosition, dndType]
   );
 
+  const handleChat = (e) => {
+    e.preventDefault();
+    const chatWindow = window.open('/chat', '_blank'); 
+    if (chatWindow) {
+      chatWindow.focus();
+    }
+  };
+
   return (
     <div className="dndflow">
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
@@ -148,6 +157,13 @@ function Canvas() {
           <Controls />
           <Background variant="dots" gap={12} size={1} />
         </ReactFlow>
+        <button 
+         style={{opacity: isDeployed? 1 : 0.5}} 
+         disabled={!isDeployed}
+         onClick={handleChat}
+        >
+          < MessageCircleMore style={{width:'2rem', height:'2rem'}}  />
+        </button>
       </div>
     </div>
   );

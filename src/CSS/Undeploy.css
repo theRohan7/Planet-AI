@@ -1,0 +1,80 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    width: 35rem;
+    position: relative;
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .close-button {
+    position: absolute;
+    right: 4%;
+    top: 3%;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #666;
+  }
+  
+  .close-button:hover {
+    color: #333;
+  }
+  
+  .modal-body h3 {
+    margin: 0 0 12px 0;
+    color: #333;
+    font-size: 1.2rem;
+  }
+  
+  .modal-body p {
+    margin: 0 0 24px 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
+  
+  .undeploy-button {
+    padding: 8px 16px;
+    border: none;
+    background: #FF5353;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .undeploy-button:hover {
+    background: #ff3939;
+  }
