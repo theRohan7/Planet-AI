@@ -6,7 +6,9 @@ A node-based AI workflow system for configuring and running AI Agents using LLMs
 
 ## Project Screenshot
 
-![Project Screenshot](./screenshot.png)
+![Project Screenshot](https://res.cloudinary.com/rohanscloud/image/upload/v1739439182/Screenshot_2025-02-13_145107_kfz9j0.png)
+![Project Screenshot](https://res.cloudinary.com/rohanscloud/image/upload/v1739439182/Screenshot_2025-02-13_145127_yzdtk3.png)
+
 
 ## Features
 
