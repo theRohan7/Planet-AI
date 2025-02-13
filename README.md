@@ -57,8 +57,20 @@ Refer to the [Documentation](https://docs.google.com/document/d/1g-qiFcCyIoYH9e2
 
 - **Live Demo:** [https://planet-ai-six.vercel.app/](https://planet-ai-six.vercel.app/)
 
-Regards,
+### Feel free to reach out to me for any questions or feedback.
+
+### Thank you for your time and effort.
+
+## Best regards,
+
 Rohan Sahu
+
+LinkedIn: [https://www.linkedin.com/in/rohansahu7/]
+
+Email: [mailto:therohansahu7@gmail.com]
+
+Portfolio: [https://portfolio-five-alpha-31.vercel.app/]
+
 
 ---
 
